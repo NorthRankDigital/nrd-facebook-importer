@@ -1,0 +1,17 @@
+{
+    "name": "north-rank-digital/facebook-importer",
+    "description": "Import events from a facebook page",
+    "type": "project",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Jonathan Baird",
+            "email": "jon@northrankdigital.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload":{
+        "psr-4": {"Inc\\": "./inc"}
+    }
+}
