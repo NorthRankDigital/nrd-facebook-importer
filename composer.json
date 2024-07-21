@@ -1,8 +1,11 @@
 {
-    "name": "north-rank-digital/facebook-importer",
-    "description": "Import events from a facebook page",
+    "name": "north-rank-digital/nrd-facebook-importer",
+    "description": "Import Facebook page events into WordPress custom post types",
     "type": "project",
     "license": "GPL",
+    "autoload":{
+        "psr-4": {"NrdFacebookImporter\\Inc\\": "./inc"}
+    },
     "authors": [
         {
             "name": "Jonathan Baird",
@@ -10,8 +13,5 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
-    "autoload":{
-        "psr-4": {"Inc\\": "./inc"}
-    }
+    "require": {}
 }

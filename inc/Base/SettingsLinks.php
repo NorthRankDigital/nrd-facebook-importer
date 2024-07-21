@@ -4,9 +4,9 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc\Base;
+namespace NrdFacebookImporter\Inc\Base;
 
-use Inc\Base\BaseController;
+use NrdFacebookImporter\Inc\Base\BaseController;
 
 class SettingsLinks extends BaseController
 {

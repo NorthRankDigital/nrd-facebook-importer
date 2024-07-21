@@ -138,11 +138,18 @@
   padding-top: 1rem;
 }
 
-.nrd-description {
+.nrdfi-description {
   margin-bottom: 1rem;
   padding: 0.15rem 1rem;
   background: #fef9c3;
   color: #854d0e;
+}
+.nrdfi-description span {
+  color: green;
+  font-size: 0.8rem;
+}
+.nrdfi-description p {
+  font-size: 0.8rem;
 }
 
 .nrd-table {

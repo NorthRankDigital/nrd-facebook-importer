@@ -4,7 +4,7 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc\Api;
+namespace NrdFacebookImporter\Inc\Api;
 
 class SettingsApi
 {

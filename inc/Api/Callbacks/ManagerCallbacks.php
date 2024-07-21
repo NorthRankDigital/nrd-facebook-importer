@@ -4,9 +4,9 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc\Api\Callbacks;
+namespace NrdFacebookImporter\Inc\Api\Callbacks;
 
-use Inc\Base\BaseController; 
+use NrdFacebookImporter\Inc\Base\BaseController; 
 
 class ManagerCallbacks extends BaseController
 {  

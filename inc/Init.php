@@ -4,7 +4,7 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc;
+namespace NrdFacebookImporter\Inc;
 
 final class Init
 {
@@ -18,11 +18,9 @@ final class Init
     return [
       Pages\Settings::class,
       Base\Enqueue::class,
-      Base\AjaxController::class,
       Base\SettingsLinks::class,
-      Base\MenuController::class,
       Base\SchedulerController::class,
-      Base\AboutController::class,
+      Base\AjaxController::class,
     ];
   }
 

@@ -4,7 +4,7 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc\Api\Callbacks;
+namespace NrdFacebookImporter\Inc\Api\Callbacks;
 
 class SchedulerCallbacks
 {

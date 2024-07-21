@@ -4,7 +4,7 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc\Base;
+namespace NrdFacebookImporter\Inc\Base;
 
 class Deactivate
 {

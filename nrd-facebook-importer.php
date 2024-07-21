@@ -51,7 +51,7 @@ require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $myUpdateChecker = PucFactory::buildUpdateChecker(
-  '', // TODO: Get github link
+  'https://github.com/NorthRankDigital/nrd-facebook-importer',
   __FILE__,
   'nrd-facebook-importer'
 );
@@ -61,7 +61,7 @@ $myUpdateChecker = PucFactory::buildUpdateChecker(
  */
 function activate_nrd_facebook_importer()
 {
-  Inc\Base\Activate::activate();
+  NrdFacebookImporter\Inc\Base\Activate::activate();
 }
 register_activation_hook(__FILE__, 'activate_nrd_facebook_importer');
 
@@ -70,14 +70,14 @@ register_activation_hook(__FILE__, 'activate_nrd_facebook_importer');
  */
 function deactivate_nrd_facebook_importer()
 {
-  Inc\Base\Deactivate::deactivate();
+  NrdFacebookImporter\Inc\Base\Deactivate::deactivate();
 }
 register_deactivation_hook( __FILE__, 'deactivate_nrd_facebook_importer');
 
 /**
  * Initialize all the core classes of the plugin.
  */
-if ( class_exists('Inc\\Init')) 
+if ( class_exists('NrdFacebookImporter\\Inc\\Init')) 
 {
-  Inc\Init::register_services();
+  NrdFacebookImporter\Inc\Init::register_services();
 }

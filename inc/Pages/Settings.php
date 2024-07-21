@@ -4,12 +4,12 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc\Pages;
+namespace NrdFacebookImporter\Inc\Pages;
 
-use Inc\Api\SettingsApi;
-use Inc\Base\BaseController;
-use Inc\Api\Callbacks\AdminCallbacks;
-use Inc\Api\Callbacks\ManagerCallbacks;
+use NrdFacebookImporter\Inc\Api\SettingsApi;
+use NrdFacebookImporter\Inc\Base\BaseController;
+use NrdFacebookImporter\Inc\Api\Callbacks\AdminCallbacks;
+use NrdFacebookImporter\Inc\Api\Callbacks\ManagerCallbacks;
 
 /**
  * 
@@ -46,12 +46,12 @@ class Settings extends BaseController
   {
     $this->pages = [
       [
-        'page_title' => 'Untappd Importer',
-        'menu_title' => 'Untappd Import',
+        'page_title' => 'Facebook Importer',
+        'menu_title' => 'Facebook Import',
         'capability' => 'manage_options',
-        'menu_slug' => 'nrd_untappd_importer',
+        'menu_slug' => 'nrd_facebook_importer',
         'callback' => array( $this->callbacks, 'dashboardTemplate'),
-        'icon_url' => $this->plugin_url . 'untappd_icon.svg',
+        'icon_url' => 'dashicons-calendar',
         'position' => 100
       ]
     ];
@@ -61,8 +61,8 @@ class Settings extends BaseController
   {
     $args = array(
       array(
-        'option_group' => 'nrd_untappd_importer_settings',
-        'option_name' => 'nrd_untappd_importer',
+        'option_group' => 'nrd_facebook_importer_settings',
+        'option_name' => 'nrd_facebook_importer',
         'callback' => array($this->callbacks_mgr, 'textBoxSanitize')
       )
     );
@@ -77,7 +77,7 @@ class Settings extends BaseController
         'id' => 'nrd_untapped_importer_settings_mgr',
         'title' => 'API Settings Manager',
         'callback' => array($this->callbacks_mgr, 'adminSectionManager'),
-        'page' => 'nrd_untappd_importer'
+        'page' => 'nrd_facebook_importer'
       ]
     ];
 
@@ -93,10 +93,10 @@ class Settings extends BaseController
         'id' => $key,
         'title' => $value,
         'callback' => array($this->callbacks_mgr, 'textBoxField'),
-        'page' => 'nrd_untappd_importer',
+        'page' => 'nrd_facebook_importer',
         'section' => 'nrd_untapped_importer_settings_mgr',
         'args' => array(
-          'option_name' => 'nrd_untappd_importer',
+          'option_name' => 'nrd_facebook_importer',
           'label_for' => $key,
           'classes' => 'example-class',
           'title' => $value

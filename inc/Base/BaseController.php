@@ -4,7 +4,7 @@
  * @package NRDFacebookImporter
  */
 
-namespace Inc\Base;
+namespace NrdFacebookImporter\Inc\Base;
 
 class BaseController
 {
@@ -17,11 +17,12 @@ class BaseController
   {
      $this->plugin_path = plugin_dir_path( dirname( __FILE__, 2 ) );
      $this->plugin_url = plugin_dir_url( dirname( __FILE__, 2 ) );
-     $this->plugin_name = plugin_basename( dirname( __FILE__, 3 ) ) . '/nrd-untappd-importer.php';
+     $this->plugin_name = plugin_basename( dirname( __FILE__, 3 ) ) . '/nrd-facebook-importer.php';
 
      $this->api_settings = array(
-      'nrdui_untappd_email' => 'Untappd Email',
-      'nrdui_untappd_api' => 'Untappd Read Only API Key',
+      'nrdfi_notification_email' => 'Email',
+      'nrdfi_facebook_app_id' => 'Facebook App ID',
+      'nrdfi_facebook_app_secret' => 'Facebook App Secret',
      );
   }
 

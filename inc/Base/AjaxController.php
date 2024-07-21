@@ -1,68 +1,37 @@
 <?php
 
+/**
+ * @package NRDFacebookImporter
+ */
 
-namespace Inc\Base;
-
-use Inc\Base\BaseController;
-use Inc\Api\External\UntappdApi;
-use Inc\Api\CreatePostApi;
+namespace NrdFacebookImporter\Inc\Base;
+use NrdFacebookImporter\Inc\Api\External\FacebookAPI;
 
 class AjaxController extends BaseController
 {
-  private $api;
-  private $createPost;
+  private $facebook_api;
 
   public function register()
   {
-    $this->api = new UntappdApi();
-    $this->createPost = new CreatePostApi();
-
-    add_action('wp_ajax_test_api', array($this, 'testAPI'));
-    add_action('wp_ajax_get_menus', array($this, 'getMenus'));
-    add_action('wp_ajax_sync_menu', array($this, 'syncMenu'));
+    $this->facebook_api = new FacebookAPI();
+    add_action('wp_ajax_nrdfi_facebook_auth', array($this, 'facebookAuth'));
+    add_action('admin_post_nrdfi_facebook_authorize_callback', array($this, 'facebook_oauth_callback_ajax'));
   }
 
-  public function testAPI()
+  public function facebookAuth()
   {
-    $api_endpoint = $this->api->api_base_url . 'current_user';
-    $api_response = $this->api->getRequest($api_endpoint);
-
-    if (isset($api_response['error'])) {
-      return wp_send_json_error(['message'=> $api_response['error']]);
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error('Unauthorized', 403);
     }
 
-    update_option('nrd_untappd_importer_api_creds', 1);
-    return wp_send_json_success(['message'=>'Successfully Connected']);
+    $login_url = $this->facebook_api->getLoginUrl();
+    wp_send_json_success(array('login_url' => $login_url));
   }
 
-  public function getMenus() 
+  public function facebook_oauth_callback_ajax()
   {
-    $api_response = $this->api->getMenus();
-    
-    if (isset($api_response['error'])) {
-      return wp_send_json_error(['message'=>$api_response['error']]);
-    }
-
-    update_option('nrd_untappd_importer_untappd_menu', $api_response);
-
-    return wp_send_json_success(['message'=>'Menus Loaded', 'data' => $api_response]);
+    $this->facebook_api->handleCallback();
+    wp_send_json_success('Successfully authenticated with Facebook.');
   }
 
-  public function syncMenu()
-  {
-    if (!isset($_POST['item_id'])) {
-      return wp_send_json_error(['message' => 'No menu id provided']);
-    }
-
-    $menu_id = sanitize_text_field($_POST['item_id']);
-    $api_response = $this->api->getMenuItems($menu_id);
-
-    if (isset($api_response['error'])) {
-      return wp_send_json_error(['message' =>$api_response['error']]);
-    }
-
-    $this->createPost->syncPosts($api_response, $menu_id);
-
-    return wp_send_json_success(['message'=>'Menu synced', 'data'=>$api_response]);
-  }
 }
