@@ -15,11 +15,13 @@ class SchedulerCallbacks
 
   public function inputSanitize( $input )
   {
+    $output = [];
+    
+    $output['import_schedule'] = sanitize_text_field($input['import_schedule']);
+    $output['selected_page'] = sanitize_text_field($input['selected_page']);
 
-    wp_clear_scheduled_hook('update_data_event');
-    error_log('----- Schedule Cleared -----');
-
-    return $input;
+    return $output;
+    
   }
 
   public function selectField($args)
@@ -33,11 +35,11 @@ class SchedulerCallbacks
     ];
 
     $name = $args['label_for'];
-    $title = $args['title'];
     $option_name = $args['option_name'];
-    $selected = get_option($option_name, '');
+    $options = get_option($option_name, array());
+    $selected = isset($options['import_schedule']) ? $options['import_schedule'] : '';
 
-    echo '<select name="'.$option_name .'" id="'.$option_name . '[' . $name . ']'.'">';
+    echo '<select name="' . $option_name . '[' . $name . ']' .'" id="'.$option_name . '[' . $name . ']'.'">';
     foreach($select_options as $key => $value)
     {
       if($selected == $key)
@@ -50,6 +52,37 @@ class SchedulerCallbacks
       }
     }
     echo '</select>';
+  }
+
+  public function pageSelectField($args)
+  {
+    $name = $args['label_for'];
+    $option_name = $args['option_name'];
+    $options = get_option($option_name, array());
+    $select_options = get_option($args['select_options'], array());
+    $selected_option = isset($options['selected_page']) ? $options['selected_page'] : '';
+
+    if(empty($select_options))
+    {
+      echo '<p style="color: red; font-weight:bold;">Need to Authenticate</p>';
+    }
+    else
+    {
+      echo '<select name="' . $option_name . '[' . $name . ']' .'" id="' . $option_name . '[' . $name . ']' . '">';
+      foreach ($select_options as $page) {
+        if($selected_option == $page['id'])
+        {
+          echo '<option value="' . $page['id'] . '" selected>' . $page['name'] . '</option>';
+        }
+        else
+        {
+          echo '<option value="' . $page['id'] . '">' . $page['name'] . '</option>';
+        }
+      }
+      echo '</select>';
+    }
+
+    
   }
 
 }

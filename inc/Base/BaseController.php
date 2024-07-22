@@ -20,7 +20,6 @@ class BaseController
      $this->plugin_name = plugin_basename( dirname( __FILE__, 3 ) ) . '/nrd-facebook-importer.php';
 
      $this->api_settings = array(
-      'nrdfi_notification_email' => 'Email',
       'nrdfi_facebook_app_id' => 'Facebook App ID',
       'nrdfi_facebook_app_secret' => 'Facebook App Secret',
      );

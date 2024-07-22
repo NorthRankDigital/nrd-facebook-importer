@@ -64,7 +64,7 @@ class SchedulerController extends BaseController
   {
     $args = [
       [
-        'id' => 'nrd_untapped_importer_schedule_index',
+        'id' => 'nrd_facebook_importer_schedule_index',
         'title' => 'Schedule Manager',
         'callback' => array($this->schedulerCallbacks, 'scheduleSectionManager'),
         'page' => 'nrd_facebook_importer_schedule_import'
@@ -78,17 +78,30 @@ class SchedulerController extends BaseController
   {
     $args = [
       [
-        'id' => 'schedule_import',
+        'id' => 'selected_page',
+        'title' => 'Page to Import',
+        'callback' => array($this->schedulerCallbacks, 'pageSelectField'),
+        'page' => 'nrd_facebook_importer_schedule_import',
+        'section' => 'nrd_facebook_importer_schedule_index',
+        'args' => array(
+          'select_options' => 'nrd_facebook_pages',
+          'option_name' => 'nrd_facebook_importer_schedule',
+          'label_for' => 'selected_page',
+          'title' => 'Page to Import'
+        )
+      ],
+      [
+        'id' => 'import_schedule',
         'title' => 'Schedule',
         'callback' => array($this->schedulerCallbacks, 'selectField'),
         'page' => 'nrd_facebook_importer_schedule_import',
-        'section' => 'nrd_untapped_importer_schedule_index',
+        'section' => 'nrd_facebook_importer_schedule_index',
         'args' => array(
           'option_name' => 'nrd_facebook_importer_schedule',
-          'label_for' => 'schedule_import',
+          'label_for' => 'import_schedule',
           'title' => 'Schedule'
         )
-      ]
+      ]      
     ];
 
     $this->settings->setFields($args);

@@ -17,4 +17,22 @@ jQuery(document).ready(function ($) {
       },
     });
   });
+
+  $("#nrd-get-pages").on("click", function (event) {
+    event.preventDefault();
+    $.ajax({
+      url: ajax_object.ajax_url,
+      type: "POST",
+      data: {
+        action: "nrdfi_get_pages",
+      },
+      success: function (response) {
+        if (response.success) {
+          location.reload();
+        } else {
+          alert("Error generating Facebook login URL.");
+        }
+      },
+    });
+  });
 });

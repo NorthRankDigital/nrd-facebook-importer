@@ -26,7 +26,7 @@
       
       <?php 
         $app_creds = get_option('nrd_facebook_importer', array());
-        $access_token = get_option('nrd_facebook_access_token', array());
+        $access_token = get_option('nrd_facebook_access_token', '');
 
         if(empty($app_creds) || (strlen($app_creds['nrdfi_facebook_app_id']) < 15 && strlen($app_creds['nrdfi_facebook_app_secret']) < 10))
         {
@@ -35,13 +35,12 @@
             <p>Please enter Facebook app ID and app secret.</p>
           <?php
         } 
-        else if(!empty($access_token) && $access_token['expires_at'] > time())
+        else if(strlen($access_token) != 0)
         {
           ?>
           <hr>
           <p>
             Facebook App Status: <span style="color:green; font-weight: 700;">Authenticated</span> <br>
-            Expires: <?php echo date('F j, Y, g:i a', $access_token['expires_at']); ?>
             <div class="nrd-flex-row nrd-items-center">
               <button id="nrd-facebook-auth" class="nrd-btn">Re-authenticate Now</button>
               <div id="result"></div>

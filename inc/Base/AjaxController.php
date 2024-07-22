@@ -15,6 +15,8 @@ class AjaxController extends BaseController
   {
     $this->facebook_api = new FacebookAPI();
     add_action('wp_ajax_nrdfi_facebook_auth', array($this, 'facebookAuth'));
+    add_action('wp_ajax_nrdfi_get_pages', array($this, 'getPages'));
+    
     add_action('admin_post_nrdfi_facebook_authorize_callback', array($this, 'facebook_oauth_callback_ajax'));
   }
 
@@ -32,6 +34,14 @@ class AjaxController extends BaseController
   {
     $this->facebook_api->handleCallback();
     wp_send_json_success('Successfully authenticated with Facebook.');
+  }
+
+  public function getPages()
+  {
+    $pages = $this->facebook_api->fetchUserPages();
+
+    wp_send_json_success(array('pages' => $pages));
+
   }
 
 }
