@@ -15,6 +15,10 @@ class SchedulerCallbacks
 
   public function inputSanitize( $input )
   {
+
+    wp_clear_scheduled_hook('nrd_facebook_import_event');
+    error_log('----- Schedule Cleared -----');
+
     $output = [];
     
     $output['import_schedule'] = sanitize_text_field($input['import_schedule']);

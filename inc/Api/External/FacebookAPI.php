@@ -6,6 +6,8 @@
 
 namespace NrdFacebookImporter\Inc\Api\External;
 
+use DateTime;
+
 class FacebookAPI
 {
   private $app_id;
@@ -140,11 +142,58 @@ class FacebookAPI
    * Summary of fetchPageEvents
    * @param mixed $page_id
    * @param mixed $accessToken
-   * @return void
+   * @return array
    */
-  public function fetchPageEvents($page_id, $accessToken)
+  public function fetchPageEvents()
   {
-    
+    $events = [];
+    $user_access_token = $this->getUserToken();
+    $options = get_option('nrd_facebook_importer_schedule', array());
+    $page_id = isset($options['selected_page']) ? $options['selected_page'] : '';
+
+    if($page_id == '')
+    {
+      return array('error' => 'no page selected');
+    }
+    $endpoint_url = "https://graph.facebook.com/{$page_id}/events?access_token={$user_access_token}";
+    $response = wp_remote_get( $endpoint_url );
+    $body = wp_remote_retrieve_body( $response );
+    $data = json_decode($body, true);
+
+    $events = [];
+    foreach($data['data'] as $item)
+    {
+      if(isset($item['event_times']))
+      {
+        foreach($item['event_times'] as $recuring_event)
+        {
+          $events[] = [
+            'id' => $recuring_event['id'],
+            'start_time' => $dateTime = DateTime::createFromFormat('Y-m-d\TH:i:sO', $recuring_event['start_time'])->format('Y-m-d\TH:i'),
+            'end_time' => isset($recuring_event['end_time']) ? $dateTime = DateTime::createFromFormat('Y-m-d\TH:i:sO', $recuring_event['end_time'])->format('Y-m-d\TH:i') : '',
+            'name' => $item['name'],
+            'description' => $item['description'],
+            'image_url' => isset($item['cover']['source']) ? $item['cover']['source'] : 'https://fictional-university.local/wp-content/uploads/2024/06/DrBarksalot.jpg',
+            'event_url' => 'https://facebook.com/events/' . $recuring_event['id']
+          ];
+        }
+      }
+      else
+      {
+        $events[] = [
+          'id' => $item['id'],
+          'start_time' => $dateTime = DateTime::createFromFormat('Y-m-d\TH:i:sO',$item['start_time'])->format('Y-m-d\TH:i'),
+          'end_time' => isset($item['end_time']) ? $dateTime = DateTime::createFromFormat('Y-m-d\TH:i:sO', $item['end_time'])->format('Y-m-d\TH:i') : '',
+          'name' => $item['name'],
+          'description' => $item['description'],
+          'image_url' => isset($item['cover']['source']) ? $item['cover']['source'] : 'https://fictional-university.local/wp-content/uploads/2024/06/DrBarksalot.jpg',
+          'event_url' => 'https://facebook.com/events/' . $item['id']
+        ];
+      }
+      
+    }
+
+    return $events;
   }
 
 }

@@ -47,6 +47,8 @@ class CustomPostTypeApi
           ),
           'menu_icon' => 'dashicons-calendar',
           'public' => true,
+          'publicly_queryable' => false,
+          'rewrite' => false,
           'has_archive' => false,
           'supports' => array(
             'title',

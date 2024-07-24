@@ -6,31 +6,42 @@
 
 namespace NrdFacebookImporter\Inc\Base;
 
-use NrdFacebookImporter\Inc\Api\SettingsApi;
 use NrdFacebookImporter\Inc\Base\BaseController;
+
+use NrdFacebookImporter\Inc\Api\SettingsApi;
+use NrdFacebookImporter\Inc\Api\CreatePostApi;
+use NrdFacebookImporter\Inc\Api\External\FacebookAPI;
 use NrdFacebookImporter\Inc\Api\Callbacks\AdminCallbacks;
 use NrdFacebookImporter\Inc\Api\Callbacks\SchedulerCallbacks;
 
 class SchedulerController extends BaseController
 {
+  private $settings;
+  private $callbacks;
+  private $schedulerCallbacks;
+  private $facebook_api;
+  private $createPost;
+  
   public function register()
   {
     $this->settings = new SettingsApi();
     $this->callbacks = new AdminCallbacks();
     $this->schedulerCallbacks = new SchedulerCallbacks();
+    $this->facebook_api = new FacebookAPI();
+    $this->createPost = new CreatePostApi();
 
     $this->setSettings();
     $this->setSections();
     $this->setFields();
 
-    // $this->updateSchedule();
+    $this->updateSchedule();
 
     $this->setSubpages();
     $this->settings->addSubPages($this->subpages)->register();
 
-    // if (isset($this->schedule)) {
-    //   add_action('update_data_event', array($this, 'updateDataFromExternalApi'));
-    // }
+    if (isset($this->schedule)) {
+      add_action('nrd_facebook_import_event', array($this, 'updateDataFromExternalApi'));
+    }
   }
 
   public function setSubpages()
@@ -105,6 +116,27 @@ class SchedulerController extends BaseController
     ];
 
     $this->settings->setFields($args);
+  }
+
+  public function updateSchedule()
+  {
+    $interval = get_option('nrd_facebook_importer_schedule', array());
+    if ($interval['import_schedule'] == '' || $interval['import_schedule'] == 'never') {
+      $this->schedule = null;
+      wp_clear_scheduled_hook('nrd_facebook_import_event');
+    } else {
+      $this->schedule = $interval['import_schedule'];
+
+      if (!wp_next_scheduled('nrd_facebook_import_event')) {
+        wp_schedule_event(time(), $this->schedule, 'nrd_facebook_import_event');
+      }
+    }
+  }
+
+  public function updateDataFromExternalApi()
+  {
+    $events = $this->facebook_api->fetchPageEvents();
+    $this->createPost->syncPosts($events, 'nrd-facebook-event');
   }
 
 }

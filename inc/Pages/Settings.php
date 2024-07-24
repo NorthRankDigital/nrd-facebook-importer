@@ -81,54 +81,34 @@ class Settings extends BaseController
     $this->custom_fields =
       [
         [
-          'post_type' => 'nrd-facebook-event',
-          'id' => 'nrdfi_event_img_url',
-          'title' => 'Event Img Url',
-          'callback' => array($this->callbacks_mgr, 'renderCustomFields'),
-          'args' => array(
-            'label_for' => 'nrdfi_event_img_url',
-            'place_holder' => 'Event Image Url'
-          )
-        ],
-        [
-          'post_type' => 'nrd-facebook-event',
           'id' => 'nrdfi_event_start_time',
           'title' => 'Event Start Date & Time',
-          'callback' => array($this->callbacks_mgr, 'renderCustomFields'),
-          'args' => array(
-            'label_for' => 'nrdfi_event_start_time',
-            'place_holder' => 'Event Start Date & Time'
-          )
+          'type' => 'datetime',
+          'post_type' => 'nrd-facebook-event'
         ],
         [
-          'post_type' => 'nrd-facebook-event',
           'id' => 'nrdfi_event_end_time',
           'title' => 'Event End Date & Time',
-          'callback' => array($this->callbacks_mgr, 'renderCustomFields'),
-          'args' => array(
-            'label_for' => 'nrdfi_event_end_time',
-            'place_holder' => 'Event End Date & Time'
-          )
+          'type' => 'datetime',
+          'post_type' => 'nrd-facebook-event'
         ],
         [
-          'post_type' => 'nrd-facebook-event',
+          'id' => 'nrdfi_event_img_url',
+          'title' => 'Event Img Url',
+          'type' => 'text',
+          'post_type' => 'nrd-facebook-event'
+        ],
+        [
           'id' => 'nrdfi_event_url',
           'title' => 'Event URL',
-          'callback' => array($this->callbacks_mgr, 'renderCustomFields'),
-          'args' => array(
-            'label_for' => 'nrdfi_event_url',
-            'place_holder' => 'Event URL'
-          )
+          'type' => 'text',
+          'post_type' => 'nrd-facebook-event'
         ],
         [
-          'post_type' => 'nrd-facebook-event',
           'id' => 'nrdfi_event_id',
           'title' => 'Event Facebook ID',
-          'callback' => array($this->callbacks_mgr, 'renderCustomFields'),
-          'args' => array(
-            'label_for' => 'nrdfi_event_id',
-            'place_holder' => 'Event Facebook ID'
-          )
+          'type' => 'text',
+          'post_type' => 'nrd-facebook-event'
         ],
       ];
 
