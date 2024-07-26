@@ -8,7 +8,7 @@
   Plugin Name: NRD Facebook Importer
   Plugin URI: https://northrankdigital.com
   Description: Import facebook events from a facebook page
-  Version: 1.0.4
+  Version: 1.0.5
   Author: North Rank Digital
   Author URI: https://northrankdigital.com
   License: GPLv2 or later
