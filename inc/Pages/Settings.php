@@ -11,7 +11,6 @@ use NrdFacebookImporter\Inc\Base\BaseController;
 use NrdFacebookImporter\Inc\Api\SettingsApi;
 use NrdFacebookImporter\Inc\Api\CustomFieldApi;
 use NrdFacebookImporter\Inc\Api\CustomPostTypeApi;
-use NrdFacebookImporter\Inc\Api\CustomTaxonomyApi;
 use NrdFacebookImporter\Inc\Api\Callbacks\AdminCallbacks;
 use NrdFacebookImporter\Inc\Api\Callbacks\ManagerCallbacks;
 
@@ -26,7 +25,6 @@ class Settings extends BaseController
   public $pages = array();
   public $subpages = array();
   public $customPostTypes;
-  public $customTaxonomies;
   public $customFields;
   public $custom_post_types;
   public $custom_fields;
@@ -41,7 +39,6 @@ class Settings extends BaseController
     $this->callbacks = new AdminCallbacks();
     $this->callbacks_mgr = new ManagerCallbacks();
     $this->customPostTypes = new CustomPostTypeApi();
-    $this->customTaxonomies = new CustomTaxonomyApi();
     $this->customFields = new CustomFieldApi();
 
     $this->setPages();
@@ -54,7 +51,6 @@ class Settings extends BaseController
     $this->storeCustomFields();
 
     $this->customPostTypes->register();
-    $this->customTaxonomies->register();
     $this->customFields->register();
     $this->settings->addPages($this->pages)->withSubPage('Settings')->register();
   }
@@ -73,7 +69,6 @@ class Settings extends BaseController
         ]
       ];
     $this->customPostTypes->addCustomPostType($this->custom_post_types);
-    $this->customTaxonomies->addCustomTaxonomy($this->custom_post_types);
   }
 
   public function storeCustomFields()

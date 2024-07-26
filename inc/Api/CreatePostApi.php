@@ -11,16 +11,16 @@ use \WP_Query;
 class CreatePostApi
 {
 
-  public function syncPosts(array $api_data, $menu_id)
+  public function syncPosts(array $api_data, $post_type)
   {
-    $existing_post_ids = $this->getPostIdsOfPostType($menu_id);
+    $existing_post_ids = $this->getPostIdsOfPostType($post_type);
 
     foreach ($api_data as $data) {
       // Create post object
       $post = [
         'post_title' => $data['name'],
         'post_content' => $data['description'],
-        'post_type' => $menu_id,
+        'post_type' => $post_type,
         'custom_fields' => [
             'nrdfi_event_id' => $data['id'],
             'nrdfi_event_start_time' => $data['start_time'],
@@ -43,10 +43,6 @@ class CreatePostApi
         $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
       }
     }
-
-    // foreach ($existing_post_ids as $post_id) {
-    //   $this->unpublishPost($post_id);
-    // }
   }
 
   public function updatePost(array $post, $existing_post_id)
@@ -65,7 +61,6 @@ class CreatePostApi
       return $post_id->get_error_message();
     } else {
       $custom_fields = $post['custom_fields'];
-      // $taxonomies = $post['taxonomies'];
 
       // Add or update custom fields if provided
       if (!empty($custom_fields)) {
@@ -73,13 +68,6 @@ class CreatePostApi
           update_post_meta($post_id, $key, $value);
         }
       }
-
-      // Add or update custom taxonomies if provided
-      // if (!empty($taxonomies)) {
-      //   foreach ($taxonomies as $taxonomy => $terms) {
-      //     $this->addTermsToPost($post_id, $terms, $taxonomy);
-      //   }
-      // }
     }
     return $post_id;
   }
@@ -99,7 +87,6 @@ class CreatePostApi
       return $post_id->get_error_message();
     } else {
       $custom_fields = $post['custom_fields'];
-      // $taxonomies = $post['taxonomies'];
 
       // Add or update custom fields if provided
       if (!empty($custom_fields)) {
@@ -107,13 +94,6 @@ class CreatePostApi
           update_post_meta($post_id, $key, $value);
         }
       }
-
-      // Add or update custom taxonomies if provided
-      // if (!empty($taxonomies)) {
-      //   foreach ($taxonomies as $taxonomy => $terms) {
-      //     $this->addTermsToPost($post_id, $terms, $taxonomy);
-      //   }
-      // }
     }
     return $post_id;
   }
@@ -137,7 +117,7 @@ class CreatePostApi
         'post_type' => $post_type,
         'meta_query' => array(
             array(
-                'key' => 'facebook_event_id',
+                'key' => 'nrdfi_event_id',
                 'value' => $facebook_event_id,
                 'compare' => '='
             )

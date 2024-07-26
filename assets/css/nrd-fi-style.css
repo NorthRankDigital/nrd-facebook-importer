@@ -99,6 +99,6 @@
 .nrdfi-form div label {
   min-width: 10rem;
 }
-.nrdfi-form div input {
-  width: 13rem;
+.nrdfi-form div input[type=text] {
+  width: 100%;
 }
