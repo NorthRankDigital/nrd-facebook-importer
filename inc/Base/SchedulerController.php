@@ -102,6 +102,18 @@ class SchedulerController extends BaseController
         )
       ],
       [
+        'id' => 'default_event_image',
+        'title' => 'Event Default Img URL',
+        'callback' => array($this->schedulerCallbacks, 'textBoxField'),
+        'page' => 'nrd_facebook_importer_schedule_import',
+        'section' => 'nrd_facebook_importer_schedule_index',
+        'args' => array(
+          'option_name' => 'nrd_facebook_importer_schedule',
+          'label_for' => 'default_event_image',
+          'title' => 'Event Default Img URL'
+        )
+      ],
+      [
         'id' => 'import_schedule',
         'title' => 'Schedule',
         'callback' => array($this->schedulerCallbacks, 'selectField'),

@@ -147,6 +147,8 @@ class FacebookAPI
   public function fetchPageEvents()
   {
     $events = [];
+    $import_settings = get_option('nrd_facebook_importer_schedule', array());
+    $default_img = isset($import_settings['default_event_image']) ? $import_settings['default_event_image'] : '';
     $user_access_token = $this->getUserToken();
     $options = get_option('nrd_facebook_importer_schedule', array());
     $page_id = isset($options['selected_page']) ? $options['selected_page'] : '';
@@ -173,7 +175,7 @@ class FacebookAPI
             'end_time' => isset($recuring_event['end_time']) ? $dateTime = DateTime::createFromFormat('Y-m-d\TH:i:sO', $recuring_event['end_time'])->format('Y-m-d\TH:i') : '',
             'name' => $item['name'],
             'description' => $item['description'],
-            'image_url' => isset($item['cover']['source']) ? $item['cover']['source'] : 'https://fictional-university.local/wp-content/uploads/2024/06/DrBarksalot.jpg',
+            'image_url' => isset($item['cover']['source']) ? $item['cover']['source'] : $default_img,
             'event_url' => 'https://facebook.com/events/' . $recuring_event['id']
           ];
         }
@@ -186,7 +188,7 @@ class FacebookAPI
           'end_time' => isset($item['end_time']) ? $dateTime = DateTime::createFromFormat('Y-m-d\TH:i:sO', $item['end_time'])->format('Y-m-d\TH:i') : '',
           'name' => $item['name'],
           'description' => $item['description'],
-          'image_url' => isset($item['cover']['source']) ? $item['cover']['source'] : 'https://fictional-university.local/wp-content/uploads/2024/06/DrBarksalot.jpg',
+          'image_url' => isset($item['cover']['source']) ? $item['cover']['source'] : $default_img,
           'event_url' => 'https://facebook.com/events/' . $item['id']
         ];
       }

@@ -23,6 +23,7 @@ class SchedulerCallbacks
     
     $output['import_schedule'] = sanitize_text_field($input['import_schedule']);
     $output['selected_page'] = sanitize_text_field($input['selected_page']);
+    $output['default_event_image'] = sanitize_text_field($input['default_event_image']);
 
     return $output;
     
@@ -84,9 +85,17 @@ class SchedulerCallbacks
         }
       }
       echo '</select>';
-    }
+    }    
+  }
 
-    
+  public function textBoxField($args)
+  {
+    $name = $args['label_for'];
+    $title = $args['title'];
+    $option_name = $args['option_name'];
+    $input = get_option($option_name);
+
+    echo '<input type="text" class="regular-text " name="' . $option_name . '[' . $name . ']' . '" value="' . (isset($input[$name]) ? $input[$name] : '') . '" placeholder="' . $title . '"/>';
   }
 
 }
