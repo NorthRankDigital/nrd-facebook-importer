@@ -18,7 +18,7 @@ jQuery(document).ready(function ($) {
     });
   });
 
-  $("#nrd-get-pages").on("click", function (event) {
+  $("#nrdfi-get-pages").on("click", function (event) {
     event.preventDefault();
     $.ajax({
       url: ajax_object.ajax_url,
