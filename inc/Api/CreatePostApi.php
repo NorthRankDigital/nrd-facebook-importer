@@ -33,11 +33,21 @@ class CreatePostApi
       // Check if the post already exists
       $existing_post_id = $this->getPostIdByFacebookEventId($post['custom_fields']['nrdfi_event_id'], $post['post_type']);
 
+      // Date
+      $date = new \DateTime($post['custom_fields']['nrdfi_event_end_time']);
+      $now = new \DateTime();
+
       if (isset($existing_post_id)) {
-        // Post exists, update it
-        $post_id = $this->updatePost($post, $existing_post_id);
-        $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
-      } else {
+        
+        if ($date < $now) {
+          $this->deletePost($existing_post_id);
+        } else {
+          // Post exists, and date is in the future update it
+          $post_id = $this->updatePost($post, $existing_post_id);
+          $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
+        }
+        
+      } else if($date > $now) {
         // Post does not exist, create it
         $post_id = $this->createPost($post);
         $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
@@ -168,6 +178,18 @@ class CreatePostApi
     // Reindex array to avoid gaps in the keys
     $post_ids = array_values($post_ids);
     return $post_ids;
+  }
+
+  public function deletePost($post_id)
+  {
+    // Delete the post and its meta fields
+    $result = wp_delete_post($post_id, true); // The second parameter 'true' forces deletion
+
+    if ($result) {
+      return 'Post deleted successfully.';
+    } else {
+      return new WP_Error('delete_failed', 'Failed to delete the post.');
+    }
   }
 
 
