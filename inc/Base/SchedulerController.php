@@ -132,12 +132,13 @@ class SchedulerController extends BaseController
 
   public function updateSchedule()
   {
-    $interval = get_option('nrd_facebook_importer_schedule', array());
-    if ($interval['import_schedule'] == '' || $interval['import_schedule'] == 'never') {
+    $options = get_option('nrd_facebook_importer_schedule', array());
+    $interval = (isset($options['import_schedule'])) ? $options['import_schedule'] : 'never';
+    if ($interval == '' || $interval == 'never') {
       $this->schedule = null;
       wp_clear_scheduled_hook('nrd_facebook_import_event');
     } else {
-      $this->schedule = $interval['import_schedule'];
+      $this->schedule = $interval;
 
       if (!wp_next_scheduled('nrd_facebook_import_event')) {
         wp_schedule_event(time(), $this->schedule, 'nrd_facebook_import_event');

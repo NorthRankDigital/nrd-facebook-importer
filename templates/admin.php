@@ -56,8 +56,8 @@
             <hr>
             <p>Facebook App Status: <span style="color:red; font-weight: 700;">NOT Authenticated</span></p>
             <p>Please authenticate with Facebook</p>
-            <div class="nrd-flex-row nrd-items-center">
-              <button id="nrd-facebook-auth" class="nrd-btn">Authenticate</button>
+            <div class="nrdfi-flex-row nrdfi-items-center">
+              <button id="nrd-facebook-auth" class="nrdfi-btn">Authenticate</button>
               <div id="result"></div>
             </div>
           <?php
