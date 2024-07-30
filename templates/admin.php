@@ -3,8 +3,8 @@
  
   <?php include 'partials/nav.php'; ?>
   
-  <div class="nrd-wraper">
-    <div class="nrd-content" style="max-width: 45rem;">
+  <div class="nrdfi-wraper">
+    <div class="nrdfi-content" style="max-width: 45rem;">
       <p></p>
       <div class="nrdfi-description">
         <p>
@@ -41,8 +41,8 @@
           <hr>
           <p>
             Facebook App Status: <span style="color:green; font-weight: 700;">Authenticated</span> <br>
-            <div class="nrd-flex-row nrd-items-center">
-              <button id="nrd-facebook-auth" class="nrd-btn">Re-authenticate Now</button>
+            <div class="nrdfi-flex-row nrdfi-items-center">
+              <button id="nrd-facebook-auth" class="nrdfi-btn">Re-authenticate Now</button>
               <div id="result"></div>
             </div>
           </p>
