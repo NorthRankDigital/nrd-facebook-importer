@@ -6,7 +6,7 @@
   <div class="nrdfi-wraper">
     <div class="nrdfi-content" style="max-width: 40rem;">
       <div class="nrdfi-description">
-        <p>Update page listings <a href="#" id="nrdfi-get-pages">click here</a></p>
+        <p>Update page listings <a href="#" id="nrd-get-pages">click here</a></p>
       </div>
       <form action="options.php" method="POST">
       <?php
