@@ -90,8 +90,8 @@ class SchedulerController extends BaseController
     $args = [
       [
         'id' => 'selected_page',
-        'title' => 'Page to Import',
-        'callback' => array($this->schedulerCallbacks, 'pageSelectField'),
+        'title' => 'Facebook Page ID',
+        'callback' => array($this->schedulerCallbacks, 'textBoxField'),
         'page' => 'nrd_facebook_importer_schedule_import',
         'section' => 'nrd_facebook_importer_schedule_index',
         'args' => array(

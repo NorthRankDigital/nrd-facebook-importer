@@ -61,7 +61,7 @@ class FacebookAPI
     }
 
     $code = $_GET['code'];
-    $token_url = "https://graph.facebook.com/v12.0/oauth/access_token?client_id={$this->app_id}&redirect_uri={$this->redirect_uri}&client_secret={$this->app_secret}&code={$code}";
+    $token_url = "https://graph.facebook.com/{$this->api_version}/oauth/access_token?client_id={$this->app_id}&redirect_uri={$this->redirect_uri}&client_secret={$this->app_secret}&code={$code}";
 
     $response = wp_remote_get($token_url);
 
