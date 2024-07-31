@@ -7,7 +7,6 @@
     <div class="nrdfi-content" style="max-width: 40rem;">
       <div class="nrdfi-description">
         <p>Update page listings <a href="#" id="nrd-get-pages">click here</a></p>
-        <?php echo get_option( 'nrd_facebook_access_token', array()); ?>
       </div>
       <form action="options.php" method="POST">
       <?php
