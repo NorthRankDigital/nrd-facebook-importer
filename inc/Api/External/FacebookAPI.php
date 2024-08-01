@@ -157,7 +157,7 @@ class FacebookAPI
     {
       return array('error' => 'no page selected');
     }
-    $endpoint_url = "https://graph.facebook.com/{$page_id}/events?fields=name,description,id,cover,start_time,end_time,event_times&access_token={$user_access_token}";
+    $endpoint_url = "https://graph.facebook.com/{$page_id}/events?fields=name,description,id,cover,start_time,end_time,event_times&access_token={$user_access_token}&limit=50";
     $response = wp_remote_get( $endpoint_url );
     $body = wp_remote_retrieve_body( $response );
     $data = json_decode($body, true);
