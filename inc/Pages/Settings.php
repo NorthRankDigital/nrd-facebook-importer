@@ -53,7 +53,70 @@ class Settings extends BaseController
     $this->customPostTypes->register();
     $this->customFields->register();
     $this->settings->addPages($this->pages)->withSubPage('Settings')->register();
+
+    add_filter('manage_nrd-facebook-event_posts_columns', [$this, 'reorder_columns']);
+    add_action('manage_nrd-facebook-event_posts_custom_column', [$this, 'custom_column_content'], 10, 2);
+    add_filter('manage_edit_nrd-facebook-event_sortable_columns', [$this, 'custom_column_sortable']);
+    add_action('pre_get_posts', [$this, 'custom_orderby']);
   }
+
+  public function reorder_columns($columns)
+  {
+    // Create a new array to store the reordered columns
+    $new_columns = array();
+
+    // Add the title column
+    $new_columns['cb'] = $columns['cb'];
+    $new_columns['title'] = $columns['title'];
+
+    // Add the custom column as the second column
+    $new_columns['event_start_time'] = __('Event Start Time', 'textdomain');
+
+    // Add the rest of the columns
+    foreach ($columns as $key => $value) {
+      if ($key !== 'cb' && $key !== 'title' && $key !== 'event_start_time') {
+        $new_columns[$key] = $value;
+      }
+    }
+
+    return $new_columns;
+  }
+
+  public function custom_column_content($column, $post_id)
+  {
+    if ($column == 'event_start_time') {
+      $custom_field_value = get_post_meta($post_id, 'nrdfi_event_start_time', true);
+      if ($custom_field_value) {
+        $date = new \DateTime($custom_field_value);
+        echo $date->format('m/d/Y \a\t h:i a');
+      } else {
+        echo 'N/A';
+      }
+    }
+  }
+
+  public function custom_column_sortable($columns)
+  {
+    $columns['event_start_time'] = 'event_start_time';
+    return $columns;
+  }
+
+  public function custom_orderby($query)
+  {
+    if (!is_admin() || !$query->is_main_query()) {
+      return;
+    }
+
+    $orderby = $query->get('orderby');
+
+    if ('event_start_time' === $orderby) {
+      $query->set('meta_key', 'nrdfi_event_start_time');
+      $query->set('orderby', 'meta_value');
+    }
+  }
+
+
+
 
   public function storeCustomPostTypes()
   {

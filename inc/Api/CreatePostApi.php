@@ -34,12 +34,13 @@ class CreatePostApi
       $existing_post_id = $this->getPostIdByFacebookEventId($post['custom_fields']['nrdfi_event_id'], $post['post_type']);
 
       // Date
+      $timezone = new \DateTimeZone('America/Chicago');
       $date = new \DateTime($post['custom_fields']['nrdfi_event_end_time']);
-      $now = new \DateTime();
+      $now = new \DateTime('now', $timezone);
 
       if (isset($existing_post_id)) {
         
-        if ($date < $now) {
+        if ($date->format('Y-m-d') < $now->format('Y-m-d')) {
           $this->deletePost($existing_post_id);
         } else {
           // Post exists, and date is in the future update it
@@ -47,7 +48,7 @@ class CreatePostApi
           $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
         }
         
-      } else if($date > $now) {
+      } else if($date >= $now) {
         // Post does not exist, create it
         $post_id = $this->createPost($post);
         $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
