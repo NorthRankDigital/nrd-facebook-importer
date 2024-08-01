@@ -48,7 +48,7 @@ class CreatePostApi
           $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
         }
         
-      } else if($date >= $now) {
+      } else if($date->format('Y-m-d') >= $now->format('Y-m-d')) {
         // Post does not exist, create it
         $post_id = $this->createPost($post);
         $existing_post_ids = $this->removePostIdFromArray($existing_post_ids, $post_id);
