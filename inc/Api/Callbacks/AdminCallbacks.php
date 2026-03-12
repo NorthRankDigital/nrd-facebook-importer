@@ -20,4 +20,14 @@ class AdminCallbacks extends BaseController
     return require_once ("$this->plugin_path/templates/schedule.php");
   }
 
+  public function logTemplate()
+  {
+    return require_once ("$this->plugin_path/templates/log.php");
+  }
+
+  public function optionsTemplate()
+  {
+    return require_once ("$this->plugin_path/templates/options.php");
+  }
+
 }

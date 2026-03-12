@@ -22,6 +22,8 @@ class AjaxController extends BaseController
 
   public function facebookAuth()
   {
+    check_ajax_referer('nrdfi_nonce', 'nonce');
+
     if (!current_user_can('manage_options')) {
       wp_send_json_error('Unauthorized', 403);
     }
@@ -33,15 +35,19 @@ class AjaxController extends BaseController
   public function facebook_oauth_callback_ajax()
   {
     $this->facebook_api->handleCallback();
-    wp_send_json_success('Successfully authenticated with Facebook.');
+    // handleCallback calls exit on success, so this only runs on failure
   }
 
   public function getPages()
   {
+    check_ajax_referer('nrdfi_nonce', 'nonce');
+
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error('Unauthorized', 403);
+    }
+
     $pages = $this->facebook_api->fetchUserPages();
-
     wp_send_json_success(array('pages' => $pages));
-
   }
 
 }

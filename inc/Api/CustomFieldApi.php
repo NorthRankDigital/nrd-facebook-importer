@@ -43,17 +43,14 @@ class CustomFieldApi
   {
     wp_nonce_field('save_custom_meta_box_data', 'custom_meta_box_nonce');
 
-    echo '<div class="nrdfi-form">';
+    echo '<div class="nrdfi-meta-fields">';
     foreach ($this->fields as $field) {
       $value = get_post_meta($post->ID, $field['id'], true);
-      echo '<div><label for="' . esc_attr($field['id']) . '">' . esc_html($field['title']) . '</label>';
+      echo '<div class="nrdfi-meta-field">';
+      echo '<label for="' . esc_attr($field['id']) . '">' . esc_html($field['title']) . '</label>';
 
       switch ($field['type']) {
-        case 'text':
-          echo '<input type="text" id="' . esc_attr($field['id']) . '" name="' . esc_attr($field['id']) . '" value="' . esc_attr($value) . '" />';
-          break;
         case 'datetime':
-          
           echo '<input type="datetime-local" id="' . esc_attr($field['id']) . '" name="' . esc_attr($field['id']) . '" value="' . esc_attr($value) . '" />';
           break;
         default:
@@ -62,12 +59,12 @@ class CustomFieldApi
       }
       echo '</div>';
     }
-    echo "</div>";
+    echo '</div>';
   }
 
   public function saveCustomMetaBoxData($post_id)
   {
-    if (!isset($_POST['custom_meta_box_nonce']) || !wp_verify_nonce($_POST['custom_meta_box_nonce'], 'save_custom_meta_box_data')) {
+    if (!isset($_POST['custom_meta_box_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['custom_meta_box_nonce'])), 'save_custom_meta_box_data')) {
       return;
     }
 
@@ -81,7 +78,7 @@ class CustomFieldApi
 
     foreach ($this->fields as $field) {
       if (array_key_exists($field['id'], $_POST)) {
-        $sanitized_value = sanitize_text_field($_POST[$field['id']]);
+        $sanitized_value = sanitize_text_field(wp_unslash($_POST[$field['id']]));
 
         if ($field['type'] == 'checkbox' && empty($sanitized_value)) {
           $sanitized_value = 'off';

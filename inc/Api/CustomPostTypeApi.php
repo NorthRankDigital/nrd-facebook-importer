@@ -27,6 +27,9 @@ class CustomPostTypeApi
 
   public function registerCustomPostTypes()
   {
+    $plugin_options = get_option('nrd_facebook_importer_options', array());
+    $is_public = isset($plugin_options['public_events']) && $plugin_options['public_events'] === '1';
+
     foreach ($this->custom_post_types as $post_type) {
       register_post_type(
         $post_type['post_type'],
@@ -46,16 +49,20 @@ class CustomPostTypeApi
             'menu_name' => $post_type['name']
           ),
           'menu_icon' => 'dashicons-calendar',
-          'public' => true,
-          'rewrite' => false,
-          'has_archive' => false,
+          'public' => $is_public,
+          'show_ui' => true,
+          'show_in_menu' => true,
+          'rewrite' => $is_public ? array('slug' => 'events') : false,
+          'has_archive' => $is_public,
+          'publicly_queryable' => $is_public,
+          'show_in_rest' => $is_public,
           'supports' => array(
             'title',
             'editor',
             'thumbnail',
             'custom-fields',
             'page-attributes',
-            'post-formats',          
+            'post-formats',
           ),
           'taxonomies' => array($post_type['singular_name'] . '_category')
         )

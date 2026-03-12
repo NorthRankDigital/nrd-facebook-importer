@@ -29,5 +29,15 @@ class Activate
     if (!get_option('nrd_facebook_pages')) {
       update_option('nrd_facebook_pages', $default);
     }
+
+    if (!get_option('nrd_facebook_token_created')) {
+      update_option('nrd_facebook_token_created', 0);
+    }
+
+    if (!get_option('nrd_facebook_token_expires')) {
+      update_option('nrd_facebook_token_expires', 0);
+    }
+
+    ImportLogger::createTable();
   }
 }

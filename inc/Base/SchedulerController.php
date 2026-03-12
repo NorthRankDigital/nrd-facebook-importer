@@ -7,6 +7,7 @@
 namespace NrdFacebookImporter\Inc\Base;
 
 use NrdFacebookImporter\Inc\Base\BaseController;
+use NrdFacebookImporter\Inc\Base\ImportLogger;
 
 use NrdFacebookImporter\Inc\Api\SettingsApi;
 use NrdFacebookImporter\Inc\Api\CreatePostApi;
@@ -21,7 +22,10 @@ class SchedulerController extends BaseController
   private $schedulerCallbacks;
   private $facebook_api;
   private $createPost;
-  
+  private $logger;
+  private $schedule = null;
+  private $subpages = array();
+
   public function register()
   {
     $this->settings = new SettingsApi();
@@ -29,6 +33,9 @@ class SchedulerController extends BaseController
     $this->schedulerCallbacks = new SchedulerCallbacks();
     $this->facebook_api = new FacebookAPI();
     $this->createPost = new CreatePostApi();
+    $this->logger = new ImportLogger();
+
+    $this->createPost->setLogger($this->logger);
 
     $this->setSettings();
     $this->setSections();
@@ -39,9 +46,12 @@ class SchedulerController extends BaseController
     $this->setSubpages();
     $this->settings->addSubPages($this->subpages)->register();
 
-    if (isset($this->schedule)) {
+    if ($this->schedule !== null) {
       add_action('nrd_facebook_import_event', array($this, 'updateDataFromExternalApi'));
     }
+
+    add_action('wp_ajax_nrdfi_run_import', array($this, 'ajaxRunImport'));
+    add_action('wp_ajax_nrdfi_clear_log', array($this, 'ajaxClearLog'));
   }
 
   public function setSubpages()
@@ -54,6 +64,22 @@ class SchedulerController extends BaseController
         'capability' => 'manage_options',
         'menu_slug' => 'nrd_facebook_importer_schedule_import',
         'callback' => array($this->callbacks, 'scheduleTemplate'),
+      ],
+      [
+        'parent_slug' => 'nrd_facebook_importer',
+        'page_title' => 'Import Log',
+        'menu_title' => 'Import Log',
+        'capability' => 'manage_options',
+        'menu_slug' => 'nrd_facebook_importer_log',
+        'callback' => array($this->callbacks, 'logTemplate'),
+      ],
+      [
+        'parent_slug' => 'nrd_facebook_importer',
+        'page_title' => 'Options',
+        'menu_title' => 'Options',
+        'capability' => 'manage_options',
+        'menu_slug' => 'nrd_facebook_importer_options',
+        'callback' => array($this->callbacks, 'optionsTemplate'),
       ],
     ];
   }
@@ -91,14 +117,13 @@ class SchedulerController extends BaseController
       [
         'id' => 'selected_page',
         'title' => 'Facebook Page ID',
-        'callback' => array($this->schedulerCallbacks, 'textBoxField'),
+        'callback' => array($this->schedulerCallbacks, 'pageIdField'),
         'page' => 'nrd_facebook_importer_schedule_import',
         'section' => 'nrd_facebook_importer_schedule_index',
         'args' => array(
-          'select_options' => 'nrd_facebook_pages',
           'option_name' => 'nrd_facebook_importer_schedule',
           'label_for' => 'selected_page',
-          'title' => 'Page to Import'
+          'title' => 'Facebook Page ID'
         )
       ],
       [
@@ -114,6 +139,18 @@ class SchedulerController extends BaseController
         )
       ],
       [
+        'id' => 'date_range_months',
+        'title' => 'Date Range',
+        'callback' => array($this->schedulerCallbacks, 'dateRangeSelectField'),
+        'page' => 'nrd_facebook_importer_schedule_import',
+        'section' => 'nrd_facebook_importer_schedule_index',
+        'args' => array(
+          'option_name' => 'nrd_facebook_importer_schedule',
+          'label_for' => 'date_range_months',
+          'title' => 'Date Range'
+        )
+      ],
+      [
         'id' => 'import_schedule',
         'title' => 'Schedule',
         'callback' => array($this->schedulerCallbacks, 'selectField'),
@@ -124,7 +161,7 @@ class SchedulerController extends BaseController
           'label_for' => 'import_schedule',
           'title' => 'Schedule'
         )
-      ]      
+      ]
     ];
 
     $this->settings->setFields($args);
@@ -148,8 +185,37 @@ class SchedulerController extends BaseController
 
   public function updateDataFromExternalApi()
   {
+    // Check token expiry and notify admin if needed
+    $token_manager = new TokenManager();
+    $token_manager->maybeNotifyExpiry();
+
     $events = $this->facebook_api->fetchPageEvents();
     $this->createPost->syncPosts($events, 'nrd-facebook-event');
+    $this->createPost->cleanupPastEvents('nrd-facebook-event');
+  }
+
+  public function ajaxRunImport()
+  {
+    check_ajax_referer('nrdfi_nonce', 'nonce');
+
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error('Unauthorized', 403);
+    }
+
+    $this->updateDataFromExternalApi();
+    wp_send_json_success(array('message' => 'Import completed successfully.'));
+  }
+
+  public function ajaxClearLog()
+  {
+    check_ajax_referer('nrdfi_nonce', 'nonce');
+
+    if (!current_user_can('manage_options')) {
+      wp_send_json_error('Unauthorized', 403);
+    }
+
+    $this->logger->clearLog();
+    wp_send_json_success(array('message' => 'Log cleared.'));
   }
 
 }

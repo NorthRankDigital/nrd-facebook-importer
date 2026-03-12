@@ -1,49 +1,77 @@
-# nrd-facebook-importer
+# NRD Facebook Importer
 
-**nrd-facebook-importer** is a WordPress plugin developed by NorthRankDigital. It allows you to connect to Facebook's API and import events from your Facebook page into custom post types within your WordPress site.
+**NRD Facebook Importer** is a WordPress plugin developed by North Rank Digital. It connects to Facebook's Graph API to import events from your Facebook page into WordPress as custom post types, with automatic scheduling and media handling.
 
 ## Features
 
-- Connect to Facebook's API with ease.
-- Import events from any Facebook page you own.
-- Map Facebook events to custom post types in WordPress.
-- Automatic updates for imported events.
+- **Facebook OAuth Authentication** — Connect via Facebook Login with long-lived user tokens (60-day expiry).
+- **Scheduled Imports** — Automatically sync events on a configurable schedule (hourly, twice daily, daily, weekly).
+- **Smart Event Management** — Automatically removes past events, deduplicates overlapping entries, and cleans up canceled/removed events.
+- **Media Handling** — Downloads event cover images as featured images with proper alt text. Re-downloads if accidentally removed.
+- **Import Log** — Tracks sync activity with retention of the last 5 sync cycles.
+- **Admin Table** — Sortable columns (start, end, status), filterable by status and month.
+- **Optional Public Pages** — Enable frontend archive (`/events/`) and single event pages with REST API support.
+- **Email Notifications** — Optional email alert to the site admin when the Facebook token is expiring or has expired.
+- **Date Range Control** — Configure how far ahead to pull events (1–12 months).
+- **Default Event Image** — Set a fallback image URL for events without a cover photo.
+
+## Requirements
+
+- WordPress 5.0+
+- PHP 8.0+
+- A Facebook App (App ID and App Secret)
+- SMTP plugin recommended for email notifications (e.g., Fluent SMTP)
 
 ## Installation
 
 1. Download the plugin from the GitHub repository.
-2. Upload the plugin to your WordPress site's `wp-content/plugins/` directory.
-3. Activate the plugin through the 'Plugins' menu in WordPress.
-4. Navigate to the plugin settings page to configure your Facebook App ID and App Secret.
+2. Upload to your WordPress site's `wp-content/plugins/` directory.
+3. Activate the plugin through the **Plugins** menu in WordPress.
 
 ## Configuration
 
-1. Go to the plugin settings page in the WordPress admin.
-2. Enter your Facebook App ID and App Secret.
-3. Authenticate with Facebook to allow the plugin to access your events.
-4. Configure the custom post types to which you want to import the events.
+### FB Connection Tab
+1. Enter your **Facebook App ID** and **App Secret**.
+2. Save credentials, then click **Authenticate with Facebook**.
+3. The connection status card shows token health and days remaining.
 
-## Usage
+**Required for Facebook App setup:**
+- Add your **Site URL** and **Redirect URI** (shown on the settings page) to your Facebook App's Valid OAuth Redirect URIs.
 
-1. After configuring the plugin, go to the import page under the plugin's menu.
-2. Select the Facebook page from which you want to import events.
-3. Click the "Import Events" button to start importing events.
-4. The imported events will appear as custom post types in your WordPress site.
+### Schedule Tab
+1. Enter your **Facebook Page ID** (found at your Facebook Page → About → Page transparency).
+2. Optionally set a **Default Event Image URL** for events without cover photos.
+3. Choose a **Date Range** for how far ahead to pull events.
+4. Set the **Schedule** interval or leave as "Never" for manual imports only.
+5. Use **Run Import Now** to trigger an immediate sync.
 
-## Frequently Asked Questions (FAQ)
+### Options Tab
+- **Email Expiry Alert** — Sends one email when the token enters the 7-day warning window, and another if it expires.
+- **Enable Event Pages** — Makes events publicly accessible with archive and single post pages, and enables REST API access.
 
-### Q: How do I get my Facebook App ID and App Secret?
-A: You can create a Facebook App and obtain the App ID and App Secret from the [Facebook Developers](https://developers.facebook.com/) site.
+### Log Tab
+- View import activity including created, updated, and deleted events.
+- Logs are automatically trimmed to the last 5 sync cycles.
 
-### Q: Can I import events from multiple Facebook pages?
-A: Currently, the plugin supports importing events from one Facebook page at a time. You can switch pages in the settings to import from a different page.
+## Frequently Asked Questions
 
-### Q: How often are the events updated?
-A: The plugin automatically checks for updates to imported events every 24 hours.
+### How do I get my Facebook App ID and App Secret?
+Create a Facebook App at [Facebook Developers](https://developers.facebook.com/). The App ID and App Secret are in your app's Settings → Basic.
 
-## Contributing
+### Where do I find my Facebook Page ID?
+Go to your Facebook Page → About → Page transparency. The Page ID is listed there.
 
-We welcome contributions to improve the plugin. To contribute, please fork the repository and create a pull request with your changes.
+### How often are events updated?
+Based on the schedule you set: hourly, twice daily, daily, or weekly. You can also run imports manually at any time.
+
+### What happens to canceled events?
+Events that exist in WordPress but are no longer returned by the Facebook API are automatically deleted along with their media attachments.
+
+### What happens to past events?
+Past events are automatically removed during each sync. An event is considered past when the current time is beyond its end time, or if there's no end time, one hour after the start time.
+
+### Does the email notification require anything special?
+It uses WordPress's built-in `wp_mail()` function. For reliable delivery, use an SMTP plugin like Fluent SMTP.
 
 ## License
 

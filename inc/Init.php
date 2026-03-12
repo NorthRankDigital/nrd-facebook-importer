@@ -21,6 +21,7 @@ final class Init
       Base\SettingsLinks::class,
       Base\SchedulerController::class,
       Base\AjaxController::class,
+      Base\AdminNotices::class,
     ];
   }
 
